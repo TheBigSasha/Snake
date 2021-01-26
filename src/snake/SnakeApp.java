@@ -24,7 +24,7 @@ public class SnakeApp{
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored){ }
-        
+
         JPanel controls = new JPanel();
         controls.setLayout(new FlowLayout());
         controls.add(new Label("Size X: "));
