@@ -166,16 +166,7 @@ class SnakeEngine extends Canvas{
     public void paint(Graphics g) {
 
         g.clearRect(0,0,getWidth(),getHeight());
-//        int pixelsPerItemVer = getHeight() / board.length;
-//        for (int i = 0; i < board.length; i++) {                              //We cannot use a foreach loop here because we must use the numbers i and j for scaling
-//            int lengthAtThisIndex = board[i].length;                          //Calculate the length of the array at this index to size the color accordingly
-//            int pixelsPerItemHorAtIndex = getWidth() / lengthAtThisIndex;       //Calculating how many pixels each color will take up
-//            for (int j = 0; j < board[i].length; j++) {                       //Nested for loop to iterate through the array at this height
-//                g.setColor(colors.get(board[i][j].getType()));                                      //Set the color to the one a this index of the color array
-//                g.fillRect(j * pixelsPerItemHorAtIndex, i * pixelsPerItemVer, getWidth() / lengthAtThisIndex,
-//                        getHeight() / board.length);                    //Draw the rectangle. We multiply the index by the pixels per item to get the position.
-//            }
-//      }
+
         g.setColor(colors.get(Type.EMPTY));
         g.fillRect(0,0,getWidth(),getHeight());
 
