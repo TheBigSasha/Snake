@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * The cutting edge AAA next gen game to put Cyberpunk 2077 to shame
+ */
 public class SnakeApp{
     private static Game g;
     private static Canvas canvas;
@@ -84,8 +87,7 @@ public class SnakeApp{
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        g.snake.direction = Direction.UP;
-                        System.out.println(g.snake.direction.name());
+                        g.setDirection(Direction.UP);
                     }
                 });
 
@@ -93,8 +95,7 @@ public class SnakeApp{
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        g.snake.direction = Direction.DOWN;
-                        System.out.println(g.snake.direction.name());
+                        g.setDirection(Direction.DOWN);
                     }
                 });
 
@@ -102,8 +103,7 @@ public class SnakeApp{
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        g.snake.direction = Direction.LEFT;
-                        System.out.println(g.snake.direction.name());
+                        g.setDirection(Direction.LEFT);
                     }
                 });
 
@@ -111,8 +111,7 @@ public class SnakeApp{
                 new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        g.snake.direction = Direction.RIGHT;
-                        System.out.println(g.snake.direction.name());
+                        g.setDirection(Direction.RIGHT);
                     }
                 });
 
@@ -145,7 +144,11 @@ public class SnakeApp{
 
 }
 
+/**
+ * Unreal Engine? Who's she?
+ */
 class SnakeEngine extends Canvas{
+    //TODO: Implement real time ray tracing
     private static final HashMap<Type, Color> colors = new HashMap<>();
     static{
         colors.put(Type.EMPTY, Color.BLACK);

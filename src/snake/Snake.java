@@ -1,14 +1,35 @@
 package snake;
+
+/**
+ * Our cute snake! He is cute!
+ */
 public class Snake {
+    /**
+     * The cells which doth represent this snake, which cells of the map are part of its very being
+     */
     private Cell[] snake;
+    /**
+     * The direction in which this snake wants to go
+     */
     public Direction direction;
 
+    /**
+     * The constructor of our snake. If you were wondering how babies are made, it's this. Our snake grows from
+     * just one cell, isn't that crazy?
+     *
+     * @param c the cell which is the origin of our snake
+     * @param d the direction its born to go in. Is this destiny?
+     */
     public Snake(Cell c, Direction d){
         c.setType(Type.SNAKE);
         snake = new Cell[]{c};
         direction = d;
     }
 
+    /**
+     * Bring me the head! This is useful so we know where snakey is.
+     * @return the head of the snake
+     */
     public Cell getHead(){
         return snake[0];
     }
@@ -17,8 +38,8 @@ public class Snake {
      * Try to eat whatever is in the cell. If the cell is food, good.
      *
      * If the cell is part of the snake, return false. You died.
-     * @param c
-     * @return
+     * @param c the cell to eat
+     * @return true if you're ok, false if you died
      */
     public boolean eat(Cell c){
         Cell[] newSnake;

@@ -1,5 +1,8 @@
 package snake;
 
+/**
+ * A class to represent a cell, with coordinates and type
+ */
 public class Cell {
     private Type type;
 
