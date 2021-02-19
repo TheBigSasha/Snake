@@ -7,7 +7,7 @@ public class Snake {
     /**
      * The cells which doth represent this snake, which cells of the map are part of its very being
      */
-    private Cell[] snake;
+    private Queue<Cell> snake;
     /**
      * The direction in which this snake wants to go
      */
@@ -22,7 +22,8 @@ public class Snake {
      */
     public Snake(Cell c, Direction d){
         c.setType(Type.SNAKE);
-        snake = new Cell[]{c};
+        snake = new Queue<Cell>();
+        snake.enqueue(c);
         direction = d;
     }
 
@@ -31,7 +32,7 @@ public class Snake {
      * @return the head of the snake
      */
     public Cell getHead(){
-        return snake[0];
+        return snake.getLast();
     }
 
     /**
@@ -42,7 +43,6 @@ public class Snake {
      * @return true if you're ok, false if you died
      */
     public boolean eat(Cell c){
-        Cell[] newSnake;
         switch(c.getType()){
             case SNAKE:
                 //End the game, the snake is dead
@@ -50,32 +50,22 @@ public class Snake {
 
             case FOOD:
                 //Grow the snake by 1, with its new head on this spot and its tail unmoved
-                newSnake = new Cell[snake.length + 1];
-                newSnake[0] = c;
                 c.setType(Type.SNAKE);
-                for(int i = 0; i < snake.length; i++){
-                    newSnake[i + 1] = snake[i];
-                }
-                snake = newSnake;
+                snake.enqueue(c);
                 return true;
 
             case EMPTY:
                 //Shift snake forward by 1, with the index 0 now being this new cell and the old last element going back to being of type empty
-                newSnake = new Cell[snake.length];
-                newSnake[0] = c;
                 c.setType(Type.SNAKE);
-                for(int i = 1; i < snake.length; i++){
-                     newSnake[i] = snake[i-1];
-                }
-
-                snake[snake.length-1].setType(Type.EMPTY);
-                snake = newSnake;
+                snake.enqueue(c);
+                Cell removed = snake.dequeue();
+                removed.setType(Type.EMPTY);
                 return true;
         }
         return false;
     }
 
     public int getSize() {
-        return snake.length;
+        return snake.size();
     }
 }
