@@ -35,22 +35,23 @@ public class AI implements Player{
                 case LEFT -> toEat = (board[x - 1][y]);
                 case RIGHT -> toEat = (board[x + 1][y]);
             }
-        }catch(ArrayIndexOutOfBoundsException ignored){
+        }catch(ArrayIndexOutOfBoundsException e){
+            points -= 1000000;
         }
         switch (toEat.getType()) {
             case FOOD -> points += 100;
             case SNAKE -> {
                 {
-                    points = Integer.MIN_VALUE;
+                    points -= 1000000;
                 }
             }
             case EMPTY -> points += distanceFromCenter(x,y,board);
         }
-        int baseScore = Integer.MIN_VALUE;
+        Integer baseScore = null;
         for(Direction dir : Direction.values()){
             int newScore = tryMoveRecursive(dir, toEat,points,depth);
             System.out.println("points for " + dir.name() +" is " + newScore );
-            if(baseScore < newScore){
+            if(baseScore == null || baseScore < newScore){
                 baseScore = newScore;
             }
         }
@@ -75,11 +76,11 @@ public class AI implements Player{
             }
 
             switch (toEat.getType()) {
-                case FOOD -> score += 10;
-                case SNAKE -> score = Integer.MIN_VALUE;
+                case FOOD -> score += 100;
+                case SNAKE -> score -= 1000000;
             }
         }catch(IndexOutOfBoundsException ex){
-            score = Integer.MIN_VALUE;;
+            score -= 1000000;
         }
 
         int baseScore = Integer.MIN_VALUE;
