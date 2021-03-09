@@ -10,7 +10,6 @@ public class AI implements Player{
     public Direction makeMove(Game g) {
         //This is the base case.
         this.g = g;
-
         Direction out = Direction.UP;
         Direction[] directions = Direction.values();
         for(Direction d : directions){
@@ -73,7 +72,6 @@ public class AI implements Player{
                 case DOWN -> toEat = (board[x][y + 1]);
                 case LEFT -> toEat = (board[x - 1][y]);
                 case RIGHT -> toEat = (board[x + 1][y]);
-                default -> toEat = board[0][0];
             }
 
             switch (toEat.getType()) {
