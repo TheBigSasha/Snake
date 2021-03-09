@@ -40,7 +40,11 @@ public class AI implements Player{
         }
         switch (toEat.getType()) {
             case FOOD -> points += 100;
-            case SNAKE -> points = Integer.MIN_VALUE;
+            case SNAKE -> {
+                {
+                    points = Integer.MIN_VALUE;
+                }
+            }
             case EMPTY -> points += distanceFromCenter(x,y,board);
         }
         int baseScore = Integer.MIN_VALUE;
@@ -59,8 +63,8 @@ public class AI implements Player{
             return score;
         }
         depth++;
-        Cell toEat;
         Cell[][] board = g.board;
+        Cell toEat = board[0][0];
         int x = position.getX();
         int y = position.getY();
         try {
@@ -71,21 +75,27 @@ public class AI implements Player{
                 case RIGHT -> toEat = (board[x + 1][y]);
                 default -> toEat = board[0][0];
             }
+
+            switch (toEat.getType()) {
+                case FOOD -> score += 10;
+                case SNAKE -> score = Integer.MIN_VALUE;
+            }
         }catch(IndexOutOfBoundsException ex){
-            return Integer.MIN_VALUE;
+            score = Integer.MIN_VALUE;;
         }
-        switch (toEat.getType()) {
-            case FOOD -> score += 10;
-            case SNAKE -> score = Integer.MIN_VALUE;
-        }
+
         int baseScore = Integer.MIN_VALUE;
         for(Direction dir : Direction.values()){
             int newScore = tryMoveRecursive(dir, toEat,score,depth);
             if(baseScore < newScore){
                 baseScore = newScore;
             }
+
+
         }
-       return score + baseScore;
+        int out = score + baseScore;
+        SnakeEngine.scores.put(position,out);
+       return out;
     }
     private static int distanceFromCenter(int x, int y, Cell[][] board){
         double boardSizeX = board.length;

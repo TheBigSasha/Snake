@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -153,14 +154,17 @@ public class SnakeApp{
 /**
  * Unreal Engine? Who's she?
  */
+
 class SnakeEngine extends Canvas{
     //TODO: Implement real time ray tracing
-    private static final HashMap<Type, Color> colors = new HashMap<>();
+    private static final Hashtable<Type, Color> colors = new Hashtable<>();
     static{
         colors.put(Type.EMPTY, Color.BLACK);
         colors.put(Type.FOOD, Color.RED);
         colors.put(Type.SNAKE, Color.GREEN);
     }
+
+    public static Hashtable<Cell, Integer>  scores = new Hashtable<>();
 
     private final Cell[][] board;
 
@@ -187,22 +191,33 @@ class SnakeEngine extends Canvas{
                 g.setColor(colors.get(board[i][j].getType()));
                 if(board[i][j].getType().equals(Type.FOOD)){
                     g.fillOval(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
-                }else if(board[i][j].getType().equals(Type.EMPTY)){
-                    Cell head  = SnakeApp.g.snake.getHead();
-                    int headX = head.getX();
-                    int headY = head.getY();
-                    int minX = headX - AI.maxDepth;
-                    int maxX = headX + AI.maxDepth;
-                    int minY = headY - AI.maxDepth;
-                    int maxY = headY + AI.maxDepth;
-
-                    if(i >= minX && i <= maxX && j >= minY && j <= maxY){
-                        g.setColor(Color.DARK_GRAY.darker().darker());
-                    }
-                    g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
-
                 } else {
                     g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+                }
+                Cell head  = SnakeApp.g.snake.getHead();
+                int headX = head.getX();
+                int headY = head.getY();
+                int minX = headX - AI.maxDepth;
+                int maxX = headX + AI.maxDepth;
+                int minY = headY - AI.maxDepth;
+                int maxY = headY + AI.maxDepth;
+                if( SnakeApp.g.p instanceof  AI && (i >= minX && i <= maxX && j >= minY && j <= maxY)){
+                    if(board[i][j].getType().equals(Type.EMPTY)){
+                        g.setColor(Color.DARK_GRAY.darker().darker());
+                        g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+
+                    }
+
+                    {
+                        if(scores.containsKey(board[i][j]) && board.length < 20){//TODO: use number of pixels calculation to determine to draw text or not
+                            g.setColor(Color.WHITE);
+                            g.setFont(g.getFont().deriveFont(4));
+                            String score = scores.get(board[i][j]).toString();
+                            g.drawString(score,i * pxPerVer, j * pxPerHor + (pxPerHor  / 2));
+                        }
+
+                    }
+
                 }
             }
         }
