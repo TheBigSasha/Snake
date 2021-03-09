@@ -50,7 +50,7 @@ public class AI implements Player{
         Integer baseScore = null;
         for(Direction dir : Direction.values()){
             int newScore = tryMoveRecursive(dir, toEat,points,depth);
-            System.out.println("points for " + dir.name() +" is " + newScore );
+//            System.out.println("points for " + dir.name() +" is " + newScore );
             if(baseScore == null || baseScore < newScore){
                 baseScore = newScore;
             }
