@@ -13,12 +13,14 @@ import java.util.TimerTask;
  * The cutting edge AAA next gen game to put Cyberpunk 2077 to shame
  */
 public class SnakeApp{
-    private static Game g;
+    static Game g;
     private static Canvas canvas;
     private static JLabel score = new JLabel("Score: " + 0);;
     private static TextField sizeX = new TextField("15");
     private static TextField sizeY = new TextField("15");
     private static TextField foodOdds = new TextField("25");
+    static TextField depth = new TextField("10");
+    static Checkbox useAI = new Checkbox("Use AI");
 
 
     public static void main(String[] args){
@@ -36,6 +38,9 @@ public class SnakeApp{
         controls.add(sizeY);
         controls.add(new Label("Food Odds: "));
         controls.add(foodOdds);
+        controls.add(new Label("AI Depth"));
+        controls.add(depth);
+        controls.add(useAI);
         JButton reset = new JButton("Reset");
         reset.addActionListener(new ActionListener() {
             @Override
@@ -43,12 +48,13 @@ public class SnakeApp{
                 int prevHeight = canvas.getHeight();
                 int prevWidth = canvas.getWidth();
                 frame.remove(canvas);
-                g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()));
+                g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()), useAI.getState() ? new AI(Integer.parseInt(depth.getText())) :new Human());
                 canvas = new SnakeEngine(g.board);
                 canvas.setSize(prevWidth, prevHeight);
                 frame.add(canvas, BorderLayout.CENTER);
                 frame.pack();
                 score.setText("Score:");
+                AI.maxDepth = Integer.parseInt(depth.getText());
             }
         });
         controls.add(reset);
@@ -58,7 +64,7 @@ public class SnakeApp{
         score.setFont(Font.getFont(Font.SERIF));
 
 
-        g = new Game(15,15, 25);
+        g = new Game(15,15, 25, useAI.getState() ? new AI(Integer.parseInt(depth.getText())) :new Human());
         canvas = new SnakeEngine(g.board);
         canvas.setSize(640, 640);
 
@@ -126,7 +132,7 @@ public class SnakeApp{
                     int prevHeight = canvas.getHeight();
                     int prevWidth = canvas.getWidth();
                     frame.remove(canvas);
-                    g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()));
+                    g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()), useAI.getState() ? new AI(Integer.parseInt(depth.getText())) :new Human());
                     canvas = new SnakeEngine(g.board);
                     canvas.setSize(prevWidth, prevHeight);
                     frame.add(canvas, BorderLayout.CENTER);
@@ -181,7 +187,21 @@ class SnakeEngine extends Canvas{
                 g.setColor(colors.get(board[i][j].getType()));
                 if(board[i][j].getType().equals(Type.FOOD)){
                     g.fillOval(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
-                }else {
+                }else if(board[i][j].getType().equals(Type.EMPTY)){
+                    Cell head  = SnakeApp.g.snake.getHead();
+                    int headX = head.getX();
+                    int headY = head.getY();
+                    int minX = headX - AI.maxDepth;
+                    int maxX = headX + AI.maxDepth;
+                    int minY = headY - AI.maxDepth;
+                    int maxY = headY + AI.maxDepth;
+
+                    if(i >= minX && i <= maxX && j >= minY && j <= maxY){
+                        g.setColor(Color.DARK_GRAY.darker().darker());
+                    }
+                    g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+
+                } else {
                     g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
                 }
             }

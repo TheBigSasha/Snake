@@ -15,13 +15,15 @@ public class Game {
      */
     Snake snake;
 
+    Player p = SnakeApp.useAI.getState() ? new AI(Integer.parseInt(SnakeApp.depth.getText())) :new Human();
+
     /**
      * Create a new game of snake
      * @param sizeX the size of the map, X
      * @param sizeY the size of the map, Y
      * @param foodOdds the odds that a cell will have food (1/ this number)
      */
-    public Game(int sizeX, int sizeY, int foodOdds){
+    public Game(int sizeX, int sizeY, int foodOdds, Player p){
         Random rand = new Random();
         board = new Cell[sizeX][sizeY];
         for(int i = 0; i < board.length; i++){
@@ -51,6 +53,7 @@ public class Game {
      * @return true if the snake still lives
      */
     public boolean advance(){
+        snake.direction = p.makeMove(this);
         int x = snake.getHead().getX();
         int y = snake.getHead().getY();
         try {
