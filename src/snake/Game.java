@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * A game of Snake
  */
-public class Game {
+public class Game implements GameInterface {
 
     /**
      * The snake which represents our snake.
@@ -38,19 +38,7 @@ public class Game {
         snake = new Snake(world.worldDimensionX/2, world.worldDimensionY /2, Direction.DOWN, world);
     }
 
-    /**
-     * The name of our game
-     * @return name of the game
-     */
-    public static String getName() {
-        return "\uD83D\uDC0D Sauder School of Business";
-    }
-
-    /**
-     * Move forward one step in the game. The snake will move in
-     * the direction it wants to go in.
-     * @return true if the snake still lives
-     */
+    @Override
     public boolean advance(){
         int x = snake.getHead().getX();
         int y = snake.getHead().getY();
@@ -66,19 +54,33 @@ public class Game {
         }
     }
 
-    /**
-     * Set the direction of our snake
-     * @param d the direction we want snakey to go in next time advance is called
-     */
+    @Override
     public void setDirection(Direction d){
         snake.direction = d;
     }
 
-    /**
-     * Gets the latest score
-     * @return the length of the snake
-     */
+    @Override
     public int getScore() {
         return snake.getSize();
+    }
+
+    @Override
+    public int getWorldDimensionX() {
+        return world.worldDimensionX;
+    }
+
+    @Override
+    public int getWorldDimensionY() {
+        return world.worldDimensionY;
+    }
+
+    @Override
+    public Cell getCell(int x, int y) {
+        return world.getCell(x,y);
+    }
+
+    @Override
+    public void setCell(Cell c) {
+        world.setCell(c);
     }
 }

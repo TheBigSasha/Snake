@@ -13,7 +13,7 @@ import java.util.TimerTask;
  * The cutting edge AAA next gen game to put Cyberpunk 2077 to shame
  */
 public class SnakeApp{
-    private static Game g;
+    private static GameInterface g;
     private static Canvas canvas;
     private static JLabel score = new JLabel("Score: " + 0);;
     private static TextField sizeX = new TextField("15");
@@ -22,7 +22,7 @@ public class SnakeApp{
 
 
     public static void main(String[] args){
-        JFrame frame = new JFrame(Game.getName());
+        JFrame frame = new JFrame(GameInterface.getName());
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -149,9 +149,9 @@ public class SnakeApp{
  */
 class SnakeEngine extends Canvas{
     //TODO: Implement real time ray tracing
-    private final Game game;
+    private final GameInterface game;
 
-    public SnakeEngine(Game g){
+    public SnakeEngine(GameInterface g){
         this.game = g;
     }
 
@@ -168,15 +168,15 @@ class SnakeEngine extends Canvas{
         g.setColor(worldColor);
         g.fillRect(0,0,getWidth(),getHeight());
 
-        int pxPerHor = getWidth() / game.world.worldDimensionX;
-        for(int i = 0; i < game.world.worldDimensionX; i++){
-            int lenAtIdx = game.world.worldDimensionY;
+        int pxPerHor = getWidth() / game.getWorldDimensionX();
+        for(int i = 0; i < game.getWorldDimensionX(); i++){
+            int lenAtIdx = game.getWorldDimensionY();
             int pxPerVer = getHeight() / lenAtIdx;
             for(int j = 0; j < lenAtIdx; j++){
 
-                var cell = game.world.getCell(i,j);
+                var cell = game.getCell(i,j);
 
-                Color color = game.world.getCell(i,j) != null ? game.world.getCell(i,j).getColor() : worldColor;
+                Color color = game.getCell(i,j) != null ? game.getCell(i,j).getColor() : worldColor;
 
                 g.setColor(color);
                 if(cell instanceof FoodCell){
@@ -187,4 +187,11 @@ class SnakeEngine extends Canvas{
             }
         }
     }
+}
+
+/**
+ * An enum to represent possible directions
+ */
+enum Direction {
+    UP, DOWN, LEFT, RIGHT
 }

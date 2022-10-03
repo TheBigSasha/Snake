@@ -27,10 +27,6 @@ public class Snake {
         direction = d;
     }
 
-    /**
-     * Bring me the head! This is useful so we know where snakey is.
-     * @return the head of the snake
-     */
     public Cell getHead(){
         return snake[0];
     }
@@ -39,13 +35,6 @@ public class Snake {
         return eat(world.getCell(x,y));
     }
 
-    /**
-     * Try to eat whatever is in the cell. If the cell is food, good.
-     *
-     * If the cell is part of the snake, return false. You died.
-     * @param c the cell to eat
-     * @return true if you're ok, false if you died
-     */
     public boolean eat(Cell c){
         SnakeCell[] newSnake;
 
