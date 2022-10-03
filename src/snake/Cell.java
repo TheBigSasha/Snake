@@ -1,14 +1,14 @@
 package snake;
 
+import java.awt.*;
+
 /**
  * A class to represent a cell, with coordinates and type
  */
-public class Cell {
+public abstract class Cell {
     /**
      * What's here
      */
-    private Type type;
-
     /**
      * The x and y coordinates of this cell
      */
@@ -29,24 +29,19 @@ public class Cell {
     }
 
     /**
-     * Get what's in this cell
+     * return + number for score or
+     * - number for kill
+     * or 0 for regular cell
+     * @return
      */
-    public Type getType() {
-        return type;
-    }
+    public abstract int eat();
 
-    /**
-     * Change what is in this cell
-     */
-    public void setType(Type type) {
-        this.type = type;
-    }
+    public abstract Color getColor();
 
     /**
      * Create a cell of a specified type
      */
-    public Cell(int x, int y,Type t){
-        this.type = t;
+    public Cell(int x, int y){
         this.x = x;
         this.y = y;
     }

@@ -43,8 +43,8 @@ public class SnakeApp{
                 int prevHeight = canvas.getHeight();
                 int prevWidth = canvas.getWidth();
                 frame.remove(canvas);
-                g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()));
-                canvas = new SnakeEngine(g.board);
+                g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()), 50);
+                canvas = new SnakeEngine(g);
                 canvas.setSize(prevWidth, prevHeight);
                 frame.add(canvas, BorderLayout.CENTER);
                 frame.pack();
@@ -58,8 +58,8 @@ public class SnakeApp{
         score.setFont(Font.getFont(Font.SERIF));
 
 
-        g = new Game(15,15, 25);
-        canvas = new SnakeEngine(g.board);
+        g = new Game(15,15, 25, 50);
+        canvas = new SnakeEngine(g);
         canvas.setSize(640, 640);
 
         frame.add(info, BorderLayout.NORTH);
@@ -126,8 +126,8 @@ public class SnakeApp{
                     int prevHeight = canvas.getHeight();
                     int prevWidth = canvas.getWidth();
                     frame.remove(canvas);
-                    g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()));
-                    canvas = new SnakeEngine(g.board);
+                    g = new Game(Integer.parseInt(sizeX.getText()),Integer.parseInt(sizeY.getText()), Integer.parseInt(foodOdds.getText()), 50);
+                    canvas = new SnakeEngine(g);
                     canvas.setSize(prevWidth, prevHeight);
                     frame.add(canvas, BorderLayout.CENTER);
                     frame.pack();
@@ -149,17 +149,10 @@ public class SnakeApp{
  */
 class SnakeEngine extends Canvas{
     //TODO: Implement real time ray tracing
-    private static final HashMap<Type, Color> colors = new HashMap<>();
-    static{
-        colors.put(Type.EMPTY, Color.BLACK);
-        colors.put(Type.FOOD, Color.RED);
-        colors.put(Type.SNAKE, Color.GREEN);
-    }
+    private final Game game;
 
-    private final Cell[][] board;
-
-    public SnakeEngine(Cell[][] board){
-        this.board = board;
+    public SnakeEngine(Game g){
+        this.game = g;
     }
 
     public void update( Graphics g ) {
@@ -170,16 +163,23 @@ class SnakeEngine extends Canvas{
 
         g.clearRect(0,0,getWidth(),getHeight());
 
-        g.setColor(colors.get(Type.EMPTY));
+        var worldColor = new WorldCell(-1,-1).getColor();
+
+        g.setColor(worldColor);
         g.fillRect(0,0,getWidth(),getHeight());
 
-        int pxPerHor = getWidth() / board.length;
-        for(int i = 0; i < board.length; i++){
-            int lenAtIdx = board[i].length;
+        int pxPerHor = getWidth() / game.world.worldDimensionX;
+        for(int i = 0; i < game.world.worldDimensionX; i++){
+            int lenAtIdx = game.world.worldDimensionY;
             int pxPerVer = getHeight() / lenAtIdx;
-            for(int j = 0; j < board[i].length; j++){
-                g.setColor(colors.get(board[i][j].getType()));
-                if(board[i][j].getType().equals(Type.FOOD)){
+            for(int j = 0; j < lenAtIdx; j++){
+
+                var cell = game.world.getCell(i,j);
+
+                Color color = game.world.getCell(i,j) != null ? game.world.getCell(i,j).getColor() : worldColor;
+
+                g.setColor(color);
+                if(cell instanceof FoodCell){
                     g.fillOval(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
                 }else {
                     g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);

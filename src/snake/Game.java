@@ -1,19 +1,19 @@
 package snake;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * A game of Snake
  */
 public class Game {
-    /**
-     * The board which represents our map
-     */
-    Cell[][] board;
+
     /**
      * The snake which represents our snake.
      */
     Snake snake;
+
+    World world;
 
     /**
      * Create a new game of snake
@@ -21,20 +21,21 @@ public class Game {
      * @param sizeY the size of the map, Y
      * @param foodOdds the odds that a cell will have food (1/ this number)
      */
-    public Game(int sizeX, int sizeY, int foodOdds){
+    public Game(int sizeX, int sizeY, int foodOdds, int rockOdds){
         Random rand = new Random();
-        board = new Cell[sizeX][sizeY];
-        for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board[0].length; j++){
-                if(rand.nextInt(foodOdds) == 1){
-                    board[i][j] = new Cell(i,j, Type.FOOD);
-                }else{
-                    board[i][j] = new Cell(i,j,Type.EMPTY);
+        world = new World(sizeX, sizeY);
+        for(int i = 0; i < world.worldDimensionX; i++){
+            for(int j = 0; j < world.worldDimensionY; j++){
+                if(rand.nextInt(foodOdds) == 1) {
+                    world.setCell(new FoodCell(i,j));
+                }else if (rand.nextInt(rockOdds) == 1){
+                    world.setCell(new OsbtacleCell(i,j));
+
                 }
             }
         }
 
-        snake = new Snake(board[board.length/2][board[0].length /2], Direction.UP);
+        snake = new Snake(world.worldDimensionX/2, world.worldDimensionY /2, Direction.DOWN, world);
     }
 
     /**
@@ -55,10 +56,10 @@ public class Game {
         int y = snake.getHead().getY();
         try {
             return switch (snake.direction) {
-                case UP -> snake.eat(board[x][y - 1]);
-                case DOWN -> snake.eat(board[x][y + 1]);
-                case LEFT -> snake.eat(board[x - 1][y]);
-                case RIGHT -> snake.eat(board[x + 1][y]);
+                case UP -> snake.eat(x, y -1);
+                case DOWN -> snake.eat(x, y + 1);
+                case LEFT -> snake.eat(x-1, y);
+                case RIGHT -> snake.eat(x + 1,y);
             };
         }catch(IndexOutOfBoundsException ex){
             return false;
