@@ -20,6 +20,8 @@ public class SnakeApp{
     private static TextField sizeY = new TextField("15");
     private static TextField foodOdds = new TextField("25");
 
+    public static int PERIOD = 500;
+
 
     public static void main(String[] args){
         JFrame frame = new JFrame(GameInterface.getName());
@@ -138,7 +140,7 @@ public class SnakeApp{
         };
 
         Timer timer = new Timer();
-        timer.schedule(task, 500,500);
+        timer.schedule(task, 500,PERIOD);
     }
 
 
@@ -153,20 +155,21 @@ class SnakeEngine extends Canvas{
 
     public SnakeEngine(GameInterface g){
         this.game = g;
+        buffer = new Color[game.getWorldDimensionX()][game.getWorldDimensionY()];
     }
 
     public void update( Graphics g ) {
         paint( g );
     }
 
+    Color[][] buffer;
+
     public void paint(Graphics g) {
 
-        g.clearRect(0,0,getWidth(),getHeight());
 
         var worldColor = new WorldCell(-1,-1).getColor();
 
         g.setColor(worldColor);
-        g.fillRect(0,0,getWidth(),getHeight());
 
         int pxPerHor = getWidth() / game.getWorldDimensionX();
         for(int i = 0; i < game.getWorldDimensionX(); i++){
@@ -178,11 +181,19 @@ class SnakeEngine extends Canvas{
 
                 Color color = game.getCell(i,j) != null ? game.getCell(i,j).getColor() : worldColor;
 
-                g.setColor(color);
-                if(cell instanceof FoodCell){
-                    g.fillOval(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+                if(buffer[i][j] != null && buffer[i][j].equals(color)){
+                    buffer[i][j] = color;
                 }else {
-                    g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+                    buffer[i][j] = color;
+                    g.setColor(color);
+                    if (cell instanceof FoodCell) {
+                        g.setColor(worldColor);
+                        g.fillRect(i * pxPerVer,j * pxPerHor,pxPerVer,pxPerHor);
+                        g.setColor(color);
+                        g.fillOval(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+                    } else {
+                        g.fillRect(i * pxPerVer, j * pxPerHor, pxPerVer, pxPerHor);
+                    }
                 }
             }
         }

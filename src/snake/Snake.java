@@ -21,7 +21,7 @@ public class Snake {
      */
     public Snake(int x, int y, Direction d, World w){
         world = w;
-        SnakeCell snakeCell = new SnakeCell(x,y);
+        SnakeCell snakeCell = new SnakeCell(x,y,true);
         world.setCell(snakeCell);
         snake = new SnakeCell[]{snakeCell};
         direction = d;
@@ -47,11 +47,12 @@ public class Snake {
 
         if(eatResult > 0){
             newSnake = new SnakeCell[snake.length + 1];
-            newSnake[0] = new SnakeCell(c.getX(),c.getY());
+            newSnake[0] = new SnakeCell(c.getX(),c.getY(), true);
             world.setCell(newSnake[0]);
 
             for(int i = 1; i < snake.length + 1; i++){
                 newSnake[i] = snake[i-1];
+                newSnake[i].setHead(false);
             }
 
             snake = newSnake;
@@ -60,10 +61,11 @@ public class Snake {
 
                 //Shift snake forward by 1, with the index 0 now being this new cell and the old last element going back to being of type empty
                 newSnake = new SnakeCell[snake.length];
-                newSnake[0] = new SnakeCell(c.getX(),c.getY());
+                newSnake[0] = new SnakeCell(c.getX(),c.getY(), true);
                 world.setCell(newSnake[0]);
                 for(int i = 1; i < snake.length; i++){
-                     newSnake[i] = snake[i-1];
+                    newSnake[i] = snake[i-1];
+                    newSnake[i].setHead(false);
                 }
 
                 world.setCell(new WorldCell(snake[snake.length-1].getX(), snake[snake.length -1].getY()));

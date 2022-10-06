@@ -15,6 +15,7 @@ public class FoodCell extends Cell {
 
     @Override
     public int eat() {
+        SnakeApp.PERIOD = Math.max(SnakeApp.PERIOD - 50, 50);
         return 1;
     }
 
